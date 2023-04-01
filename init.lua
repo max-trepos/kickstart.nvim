@@ -128,20 +128,22 @@ set clipboard=unnamedplus
 set mouse+=a
 nnoremap <2-LeftMouse> y
 
-function SelectionToClipboard()
-	if mode() == "v"
-		let selection_start = getcurpos()[1:]
-		silent normal! o
-		let selection_end = getcurpos()[1:]
+if exists('*SelectionToClipboard')
+  function SelectionToClipboard()
+    if mode() == "v"
+      let selection_start = getcurpos()[1:]
+      silent normal! o
+      let selection_end = getcurpos()[1:]
 
-		silent normal! "*y
+      silent normal! "*y
 
-		call cursor(selection_start)
-		silent normal! v
-		call cursor(selection_end)
-		silent normal! o
-	endif
-endfunction
+      call cursor(selection_start)
+      silent normal! v
+      call cursor(selection_end)
+      silent normal! o
+    endif
+  endfunction
+endif
 
 vnoremap <LeftRelease> <Cmd>call SelectionToClipboard()<cr>
 
@@ -316,6 +318,14 @@ autocmd FileType help wincmd j
 
 set termguicolors " this variable must be enabled for colors to be applied properly
 
+""""""""""""""""""""""""""""""
+" => Highlight Yank
+""""""""""""""""""""""""""""""
+augroup highlight_yank
+    autocmd!
+    au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=2000}
+augroup END
+
 ]])
 
 
@@ -408,16 +418,72 @@ require('lazy').setup({
 
   { -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
+    dependencies = {
+      'kdheepak/tabline.nvim',
+    },
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
-        theme = 'onedark',
-        component_separators = '|',
-        section_separators = '',
+        icons_enabled = true,
+        theme = 'dracula',
+        component_separators = { left = '', right = ''},
+        section_separators = { left = '', right = ''},
+        disabled_filetypes = {}
       },
+      sections = {
+        lualine_a = {'mode'},
+        lualine_x = {'branch'},
+        lualine_c = { 
+                    },
+        lualine_y = {
+                      { 'diagnostics', sources = {"nvim_diagnostic"}, symbols = {error = ' ', warn = ' ', info = ' ', hint = ' '} },
+                      'filetype',
+                      {
+                        'fileformat',
+                        symbols = {
+                          unix = '', -- e712
+                          dos = '', -- e70f
+                          mac = '', -- e711
+                        }
+                      }, 
+                      'encoding'
+        },
+        lualine_b = {'%r%{getcwd()}%h',
+                      {'filename',
+                         file_status = true,  -- displays file status (readonly status, modified status)
+                         path = 1,            -- 0 = just filename, 1 = relative path, 2 = absolute path
+                         shorting_target = 40 -- Shortens path to leave 40 space in the window,
+                      }
+                    },
+        lualine_z = {'location'}
+      },
+      inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {}
+      },
+      winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {{'filename', filestatus = true}},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {}
+      },
+      inactive_winbar = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {{'filename', filestatus = true}},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {}
+      },
+      extensions = {'quickfix'}
     },
-  },
+  }, -- Set lualine as statusline end
 
   { -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
@@ -433,7 +499,11 @@ require('lazy').setup({
   { 'numToStr/Comment.nvim', opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
-  { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } },
+  { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' },
+    opts ={
+      defaults = {file_ignore_patterns = { ".csv", ".xlsx", ".docx", "node_modules" }}
+    }
+  },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` is available. Make sure you have the system
