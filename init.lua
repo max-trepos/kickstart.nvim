@@ -42,6 +42,283 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Neovide
+vim.cmd([[
+
+set rtp+=D:\Dropbox\Apps\MobaXterm_root\nvim
+" DEtect for WSL
+function! Is_WSL() abort
+  let proc_version = '/proc/version'
+  return filereadable(proc_version)
+        \  ? !empty(filter(
+        \    readfile(proc_version, '', 1), { _, val -> val =~? 'microsoft' }))
+        \  : 0
+        " \  : v:false
+endfunction
+
+if has ("GuiFont")
+	GuiFont  Hack NF:h10
+endif
+"
+" neovide
+set guifont=Hack\ NF:h10
+let g:neovide_cursor_animate_in_insert_mode=v:false
+let g:neovide_remember_window_size = v:true
+
+command! -nargs=1 -complete=file TablineTabNew1 :lua require'tabline'.tab_new(<f-args>)
+
+if Is_WSL() == 1 
+  let configpath="/mnt/d/Dropbox/Apps/MobaXterm_root/" 
+  nnoremap <Leader>iv :tabe /mnt/d/Dropbox/Apps/MobaXterm_root/nvim/init.vim<CR> <bar> :tcd ~/.config/nvim<CR> 
+  nnoremap <Leader>al :TablineTabNew /mnt/d/Dropbox/Apps/Alacritty/alacritty.yaml<CR>
+  nnoremap <Leader>ah :TablineTabNew /mnt/d/Dropbox/scripts/auto_hot_key/ahk_program_run.ahk<CR> <bar> :tcd /mnt/d/Dropbox/scripts/auto_hot_key<CR>
+  nnoremap <Leader>wz :TablineTabNew /mnt/d/Dropbox/Apps/WezTerm/wezterm.lua<CR> <bar> :tcd /mnt/d/Dropbox/Apps/WezTerm<CR>
+  let xrtp=configpath . "nvim" 
+  let plugpath=xrtp . "/plugged"
+  set rtp+=/mnt/d/Dropbox/Apps/MobaXterm_root/nvim
+  " echom "Max was here"
+  "
+  let g:startify_session_dir = '~/.config/nvim/session'
+else
+  let configpath="D:\\Dropbox\\Apps\\MobaXterm_root\\"
+  nnoremap <Leader>iv :tabe D:\Dropbox\Apps\MobaXterm_root\nvim\init.vim<CR> <bar> :tcd D:\Dropbox\Apps\MobaXterm_root\nvim
+  nnoremap <Leader>ah :tabe D:\Dropbox\scripts\auto_hot_key\ahk_program_run.ahk<CR> <bar> :tcd D:\Dropbox\scripts\auto_hot_key
+  nnoremap <Leader>wz :TablineTabNew D:\Dropbox\Apps\WezTerm\wezterm.lua<CR> <bar> :tcd D:\Dropbox\Apps\WezTerm<CR>
+  let xrtp=configpath . "nvim"
+  let plugpath=xrtp . "\\plugged"
+  let g:startify_session_dir = 'D:\\Dropbox\\Apps\\MobaXterm_root\\'
+endif
+"
+"Startify
+"
+let g:startify_change_to_dir = 0
+let g:startify_session_delete_buffers = 0
+let g:startify_bookmarks = ['']
+ 
+" For tabline.nvim
+set sessionoptions+=tabpages,globals " store tabpages and globals in session
+
+set autoindent
+set tabstop=2 
+set expandtab "no replace 4 spaces to tab
+set shiftwidth=2
+set softtabstop=2
+set linebreak
+set hlsearch
+set ignorecase
+"  When scrolling always keep 5 line readable
+set  scrolloff=5
+
+" dangerous will witch buffer even not saved, used for toggleterm.nvim
+set hidden
+
+set foldmethod=syntax
+set nofoldenable
+au BufRead * normal zR
+
+" dangerous will witch buffer even not saved, used for toggleterm.nvim
+set tags=./tags,tags;/
+
+if has ("syntax")
+	syntax on
+endif
+
+" Mouse settings
+set clipboard=unnamedplus
+set mouse+=a
+nnoremap <2-LeftMouse> y
+
+function SelectionToClipboard()
+	if mode() == "v"
+		let selection_start = getcurpos()[1:]
+		silent normal! o
+		let selection_end = getcurpos()[1:]
+
+		silent normal! "*y
+
+		call cursor(selection_start)
+		silent normal! v
+		call cursor(selection_end)
+		silent normal! o
+	endif
+endfunction
+
+vnoremap <LeftRelease> <Cmd>call SelectionToClipboard()<cr>
+
+map <Space> <Leader>
+
+noremap <Leader>y "*y
+noremap <Leader>p "xp
+noremap <Leader>Y "+y
+noremap <Leader>P "+p
+" Shortcut to use blackhole register by default
+nnoremap d "xd
+vnoremap d "xd
+nnoremap D "xD
+vnoremap D "xD
+nnoremap c "xc
+vnoremap c "xc
+nnoremap C "xC
+vnoremap C "xC
+" nnoremap x "_x
+" vnoremap x "_x
+" nnoremap X "_X
+" vnoremap X "_X" 
+"
+" Remapping y, so after yanking a block, it will go back to the last position
+vnoremap y ygv<Esc>
+
+" REselect by visual what has been pasted
+nnoremap <expr> gV '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+" Shift Insert mapped to yanking the * buffer in Insert Mode
+inoremap <S-Insert> <C-r>* 
+
+" Allows to move in wrapped lines
+nnoremap <expr> <Down> (v:count == 0 ? 'g<down>' : '<down>')
+vnoremap <expr> <Down> (v:count == 0 ? 'g<down>' : '<down>')
+nnoremap <expr> <Up> (v:count == 0 ? 'g<up>' : '<up>')
+vnoremap <expr> <Up> (v:count == 0 ? 'g<up>' : '<up>')
+"
+" shift+arrow selection
+nmap <S-Up> V<Up>
+nmap <S-Down> V<Down>
+nmap <S-Left> v<Left>
+nmap <S-Right> v<Right>
+vmap <S-Up> <Up>
+vmap <S-Down> <Down>
+vmap <S-Left> <Left>
+vmap <S-Right> <Right>
+"Visual blocck
+imap <S-Up> <Esc>V<Up>
+imap <S-Down> <Esc>V<Down>
+imap <S-Left> <Esc>v<Left>
+imap <S-Right> <Esc>v<Right>
+vnoremap <A-Down> :m '>+1<CR>gv
+vnoremap <A-up> :m '<-2<CR>gv
+"Have :W act :w
+command! -bang -range=% -complete=file -nargs=* W <line1>,<line2>write<bang> <args>
+"Have :Q act :q
+command! -bang Q quit<bang>
+nnoremap <C-s> <cmd>w<CR>
+inoremap <C-s> <Esc><cmd>w<CR>
+"
+" Some normal editor mappings
+noremap <C-Home> gg
+noremap <C-End> G
+nnoremap <C-Up> <C-e>
+inoremap <C-Up> <C-x><C-e>
+nnoremap <C-Down> <C-y>
+inoremap <C-Down> <C-x><C-y>
+noremap <C-Left> b
+noremap <C-Right> w
+
+nnoremap <A-End> yyp
+nnoremap <A-Up>   {
+nnoremap <A-Down> }
+"
+" inoremap <A-End>  <C-o>D
+" nnoremap <A-End>  Da
+inoremap <A-End>  <Esc>Ypi
+nnoremap <A-End> yyp
+inoremap <A-Del>  <C-o>D
+nnoremap <A-Del>  Da
+
+inoremap <A-space> <C-x><C-n>
+ 
+noremap <C-h> :%s/<C-r>0/<C-r>0/g
+noremap <A-h> :noh<CR>
+noremap <A-w> <C-W>w
+"
+" Quickly insert an empty new line without entering insert mode
+nnoremap <Leader>o o<Esc>
+nnoremap <Leader>O O<Esc>
+
+nnoremap <silent> oo :<C-u>call append(line("."),   repeat([""], v:count1))<CR>
+nnoremap <silent> OO :<C-u>call append(line(".")-1,   repeat[""], v:count1))<CR>
+
+" toggle cursor line
+nnoremap <leader>l :set cursorline!<cr>
+
+" noremap <leader>q :bp<bar>sp<bar>bn<bar>bd<CR>
+noremap <leader>q :Bdelete<CR>
+nnoremap <Leader><space> i<space><esc>
+
+nnoremap <Leader>sy :syntax off <CR> :syntax on <CR>
+nnoremap <Leader>qc :cclose <CR>
+nnoremap <A-c> :cclose <CR>
+
+nnoremap <Leader>; A;<ESC>j
+
+" To replace a word with uanked test in normal mode (Stamp)
+nnoremap S diw"0P
+
+nnoremap <leader>d d
+vnoremap <leader>d d
+nnoremap <leader>D D
+vnoremap <leader>D D
+nnoremap <leader>c c
+vnoremap <leader>c c
+nnoremap <leader>C C
+vnoremap <leader>C C
+nnoremap <leader>x x
+vnoremap <leader>x x
+nnoremap <leader>X X
+vnoremap <leader>X X
+
+" First remap <tab> (and <c-i>) to <c-n>
+nnoremap <c-n> <tab>
+
+" better ident
+nnoremap <Tab> >>_
+nnoremap <S-Tab> <<_
+inoremap <S-Tab> <C-D>
+vnoremap <Tab> >gv
+vnoremap <S-Tab> <gv
+
+" Datetime functions
+nnoremap <leader>ss diw"=strftime("%Y%m%d") . "001" <CR>gP
+nnoremap <leader>sd diW"=strftime("%d-%b-%Y") <CR>gPBviWU
+nnoremap <leader>sda yiW:%s/\(<C-r>0\)/\=strftime("%d-%b-%Y") /g<CR>''
+
+" Lowercase (su) or Uppercase (sU)  the word under the cursor for all occurances in the file
+nnoremap <leader>su yiW:%s/\(<C-r>0\)/\L\1/g<CR>''
+nnoremap <leader>sU yiW:%s/\(<C-r>0\)/\U\1/g<CR>''
+ 
+""""""""""""""""""""""""""""""
+" => Gutter
+""""""""""""""""""""""""""""""
+" Show line number and relativenumber 
+set number
+set relativenumber
+highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+set statusline=\ %F%m%r%h\%w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+"set autochdir
+
+""""""""""""""""""""""""""""""
+" trigger `autoread` when files changes on disk
+" see https://github.com/neovim/neovim/issues/1936 for issue on neovim, this
+" not working
+""""""""""""""""""""""""""""""
+set autoread
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+" notification after file change
+autocmd FileChangedShellPost *
+        \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+autocmd FileType help wincmd j
+
+
+set termguicolors " this variable must be enabled for colors to be applied properly
+
+]])
+
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -65,6 +342,8 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
+
+
 
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -112,11 +391,18 @@ require('lazy').setup({
     },
   },
 
-  { -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
+  -- { -- Theme inspired by Atom
+  --   'navarasu/onedark.nvim',
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme 'onedark'
+  --   end,
+  -- },
+  {
+    -- 'Mofiqul/dracula.nvim',
+    'dracula/vim',
     config = function()
-      vim.cmd.colorscheme 'onedark'
+      vim.cmd.colorscheme 'dracula'
     end,
   },
 
