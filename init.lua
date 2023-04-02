@@ -59,7 +59,7 @@ endfunction
 if has ("GuiFont")
 	GuiFont  Hack NF:h10
 endif
-"
+
 " neovide
 set guifont=Hack\ NF:h10
 let g:neovide_cursor_animate_in_insert_mode=v:false
@@ -124,7 +124,21 @@ if has ("syntax")
 endif
 
 " Mouse settings
+" set clipboard+=unnamedplus
 set clipboard=unnamedplus
+" let g:clipboard = {
+"                 \   'name': 'WslClipboard',
+"                 \   'copy': {
+"                 \      '+': 'clip.exe',
+"                 \      '*': 'clip.exe',
+"                 \    },
+"                 \   'paste': {
+"                 \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+"                 \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+"                 \   },
+"                 \   'cache_enabled': 0,
+"                 \ }
+
 set mouse+=a
 nnoremap <2-LeftMouse> y
 
@@ -321,10 +335,10 @@ set termguicolors " this variable must be enabled for colors to be applied prope
 """"""""""""""""""""""""""""""
 " => Highlight Yank
 """"""""""""""""""""""""""""""
-augroup highlight_yank
-    autocmd!
-    au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=2000}
-augroup END
+" augroup highlight_yank
+"     autocmd!
+"     au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=2000}
+" augroup END
 
 ]])
 
@@ -353,7 +367,11 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
-
+  'wellle/targets.vim',
+  'junegunn/vim-easy-align',
+  -- 'junegunn/vim-peekaboo',
+  'godlygeek/tabular',
+  'windwp/nvim-autopairs',
 
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -528,6 +546,13 @@ require('lazy').setup({
     end,
   },
 
+  {'chentoast/marks.nvim'},
+  {'kylechui/nvim-surround'},
+  {'tpope/vim-eunuch'},
+  {'akinsho/toggleterm.nvim'},
+  {'voldikss/vim-floaterm'},
+  {'moll/vim-bbye'},
+   
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -601,7 +626,7 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
-    vim.highlight.on_yank()
+    vim.highlight.on_yank({higroup="IncSearch", timeout=2000})
   end,
   group = highlight_group,
   pattern = '*',
@@ -611,6 +636,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
+    file_ignore_patterns = { ".csv", ".xlsx", ".docx", "node_modules" }, 
     mappings = {
       i = {
         ['<C-u>'] = false,
@@ -624,9 +650,9 @@ require('telescope').setup {
 pcall(require('telescope').load_extension, 'fzf')
 
 -- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
+-- vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>f/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
     winblend = 10,
@@ -634,11 +660,11 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -777,6 +803,9 @@ local servers = {
   },
 }
 
+-- Setup nvim-autopairs
+require('nvim-autopairs').setup{}
+
 -- Setup neovim lua configuration
 require('neodev').setup()
 
@@ -851,3 +880,48 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+require'marks'.setup {
+  -- whether to map keybinds or not. default true
+  default_mappings = true,
+  -- which builtin marks to show. default {}
+  builtin_marks = { ".", "<", ">", "^" },
+  -- whether movements cycle back to the beginning/end of buffer. default true
+  cyclic = true,
+  -- whether the shada file is updated after modifying uppercase marks. default false
+  force_write_shada = false,
+  -- how often (in ms) to redraw signs/recompute mark positions. 
+  -- higher values will have better performance but may cause visual lag, 
+  -- while lower values may cause performance penalties. default 150.
+  refresh_interval = 250,
+  -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
+  -- marks, and bookmarks.
+  -- can be either a table with all/none of the keys, or a single number, in which case
+  -- the priority applies to all marks.
+  -- default 10.
+  sign_priority = { lower=10, upper=15, builtin=8, bookmark=20 },
+  -- disables mark tracking for specific filetypes. default {}
+  excluded_filetypes = {},
+  -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
+  -- sign/virttext. Bookmarks can be used to group together positions and quickly move
+  -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
+  -- default virt_text is "".
+  bookmark_0 = {
+    sign = "⚑",
+    virt_text = "hello world"
+  },
+  mappings = {}
+}
+
+require("nvim-surround").setup({
+            -- Configuration here, or leave empty to use defaults
+        })
+
+vim.cmd([[
+
+""""""""""""""""""""""""""""""
+" => Target, Never seek backwards
+""""""""""""""""""""""""""""""
+" let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
+let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA'
+]])
