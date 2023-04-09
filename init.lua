@@ -436,9 +436,9 @@ require('lazy').setup({
 
   { -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
-    dependencies = {
-      'kdheepak/tabline.nvim',
-    },
+    -- dependencies = {
+    --   'kdheepak/tabline.nvim',
+    -- },
     -- See `:help lualine.txt`
     opts = {
       options = {
@@ -502,6 +502,39 @@ require('lazy').setup({
       extensions = {'quickfix'}
     },
   }, -- Set lualine as statusline end
+
+  {
+    -- 'Mofiqul/dracula.nvim',
+    'kdheepak/tabline.nvim',
+    dependencies = {
+      'nvim-lualine/lualine.nvim',
+      'kyazdani42/nvim-web-devicons',
+    },
+    config = function()
+     require'tabline'.setup {
+      -- Defaults configuration options
+      enable = true,
+      options = {
+      -- If lualine is installed tabline will use separators configured in lualine by default.
+      -- These options can be used to override those settings.
+        section_separators = {'', ''},
+        component_separators = {'', ''},
+        max_bufferline_percent = 66, -- set to nil by default, and it uses vim.o.columns * 2/3
+        show_tabs_always = false, -- this shows tabs only when there are more than one tab or if the first tab is named
+        show_devicons = true, -- this shows devicons in buffer section
+        show_bufnr = false, -- this appends [bufnr] to buffer section,
+        show_filename_only = false, -- shows base filename only instead of relative path in filename
+        modified_icon = "+ ", -- change the default modified icon
+        modified_italic = false, -- set to true by default; this determines whether the filename turns italic if modified
+        show_tabs_only = false, -- this shows only tabs instead of tabs + buffers
+      }
+    }
+    vim.cmd[[
+      set guioptions-=e " Use showtabline in gui vim
+      set sessionoptions+=tabpages,globals " store tabpages and globals in session
+    ]]
+    end,
+  },
 
   { -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
@@ -660,6 +693,7 @@ vim.keymap.set('n', '<leader>f/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
+vim.keymap.set('n', '<leader>fc', require('telescope.builtin').command_history, { desc = 'Command History' })
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
@@ -919,9 +953,199 @@ require("nvim-surround").setup({
 
 vim.cmd([[
 
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+xmap gt <Plug>(Tabularize)
+
+""""""""""""""""""""""""""""""
+" => Tabularize
+""""""""""""""""""""""""""""""
+nmap <Leader>t\|\| :Tabularize /\|\|<CR>
+vmap <Leader>t\|\| :Tabularize /\|\|<CR>
+nmap <Leader>t, :Tabularize /,<CR>
+vmap <Leader>t, :Tabularize /,<CR>
+
+""""""""""""""""""""""""""""""
+" => vim-commentry
+""""""""""""""""""""""""""""""
+autocmd FileType sql setlocal commentstring=--\ %s
+autocmd FileType autohotkey setlocal commentstring=;\ %s
+nmap <leader>/ gcc
+nmap <C-/> gcc
+xnoremap <C-m> :norm gcc
+
+" no auto comment on enter
+autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
+
+""""""""""""""""""""""""""""""
+" => floaterm
+""""""""""""""""""""""""""""""
+let g:floaterm_autoinsert = v:false
+let g:floaterm_width = 0.8
+
+nnoremap <leader>lg :FloatermNew! --title=lazygit lazygit<CR>
+
 """"""""""""""""""""""""""""""
 " => Target, Never seek backwards
 """"""""""""""""""""""""""""""
 " let g:targets_seekRanges = 'cc cr cb cB lc ac Ac lr rr lb ar ab lB Ar aB Ab AB rb rB bb bB BB'
 let g:targets_jumpRanges = 'rr rb rB bb bB BB ll al Al aa Aa AA'
+
+""""""""""""""""""""""""""""""
+" => toggleterm
+""""""""""""""""""""""""""""""
+" By applying the mappings this way you can pass a count to your
+" mapping to open a specific window.
+" For example: 2<C-t> will open terminal 2
+nnoremap <leader>te <Cmd>exe v:count1 . "ToggleTerm"<CR>
+inoremap <silent><c-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
+
+""""""""""""""""""""""""""""""
+" => My TabToggle Terminal
+""""""""""""""""""""""""""""""
+autocmd TermOpen * startinsert
+autocmd BufWinEnter,WinEnter term://* startinsert
+
+let g:tab_buf = [-1]
+function! s:TabToggleTerminal() abort
+  let current_tabpage = tabpagenr()
+  let index = current_tabpage - 1
+  " echom "current tabpage: " . current_tabpage
+  " echom "current index: " . index
+  if len(g:tab_buf) == current_tabpage
+     " echom "tab_buf exists"
+  else
+     " echom "tab_buf does not exists"
+     call  add(g:tab_buf, -1)
+     " echom g:tab_buf
+  endif
+
+  if g:tab_buf[index] == -1
+    execute "sp | wincmd j | resize 20 |  term "
+    let g:tab_buf[index] = bufnr("$")
+  else
+    let visible = win_findbuf(g:tab_buf[index])
+    " echom "visible: " . len(visible)
+    if len(visible) > 0 
+      call win_execute(visible[0], 'wincmd c')
+      " echom visible[0]
+    else
+   "  echom "not visible"
+      execute "sp | wincmd j | resize 20 | b" . g:tab_buf[index]
+    endif
+  endif
+endfunction
+    
+" nnoremap <silent> <C-t> :call <SID>TabToggleTerminal()<CR>
+" tnoremap <silent> <C-t> <C-\><C-n><C-w>p:call <SID>TabToggleTerminal()<CR>
+" tnoremap <leader> tc <ESC><C-w>k:call <SID>TabToggleTerminal()<CR>
+" 
+" In the new setup somehow this terminal does not work anymore. Anyhow with
+" Wezterm don't really need this too
+
+autocmd BufEnter *.log :setlocal filetype=log
+""""""""""""""""""""""""""""""
+" => Set .pkb, .pks to sql filetype
+""""""""""""""""""""""""""""""
+" autocmd BufEnter *.pkb :setlocal filetype=sql
+" autocmd BufEnter *.pks :setlocal filetype=sql
+" autocmd BufEnter *.plb :setlocal filetype=sql
+" autocmd BufEnter *.pls :setlocal filetype=sql
+" autocmd BufEnter *.ldt :setlocal filetype=sql
+autocmd BufEnter .env.* :setlocal filetype=sh
+
+let g:csv_no_conceal = 1
+
+  " augroup myautocmds
+  "   autocmd!
+  "   au FileType vim nnoremap  <buffer> <leader><F5> :so%<CR>
+  "   au FileType lua nnoremap  <buffer> <leader><F5> :luafile %<CR>
+  " augroup END
+
+
+""""""""""""""""""""""""""""""
+" => asyncrun for sql
+""""""""""""""""""""""""""""""
+let g:asyncrun_open = 20
+ if has('win32') || has('win64') || has('win95') || has('win16')
+    nnoremap  <F3> :AsyncRun -program=wsl /mnt/d/test.sh %:p<CR>
+    nnoremap  <F4> :FloatermNew --name=executeSql devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap  <F5> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap  <F6> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/install_sql.sh %:p<CR>
+    nnoremap  <F7> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/copy_to_md.sh %:p<CR>
+    nnoremap  <C-F9> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/drop_sql.sh %:p<CR>
+ else
+    nnoremap  <F3> :FloatermNew! --name=sql --title=sql --wintype=split --position=rightbelow devops_scripts/sqlcl.sh<CR>
+    nnoremap  <F4> :AsyncRun  devops_scripts/execute_sqlcl.sh devops_scripts/50.SQL_scripts/get_dba_tab_cols.sql @0<CR>
+    nnoremap  <S-F4> :exec ":AsyncRun -mode=term -pos=floaterm  devops_scripts/execute_sqlcl.sh devops_scripts/50.SQL_scripts/get_dba_tab_cols.sql" getreg("0")<CR>
+    nnoremap  <F5> :AsyncRun devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap  <C-F5> :AsyncRun -mode=term -pos=floaterm devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap  <leader>f5 :AsyncRun -mode=term -pos=floaterm devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap  <M-F5> :call FloatingWindowLog('/tmp/execute.log')<CR>
+    nnoremap  <F6> :AsyncRun devops_scripts/install_sql.sh %:p<CR>
+    nnoremap  <C-F6> :AsyncRun -mode=term -pos=floaterm_reuse devops_scripts/install_sql.sh %:p<CR>
+    nnoremap  <M-F6> :call FloatingWindowLog('/tmp/install.log')<CR>
+    nnoremap  <F7> :AsyncRun devops_scripts/copy_to_md.sh %:p<CR>
+    nnoremap  <F9> :FloatermToggle <CR>
+    nnoremap  <C-F9> :AsyncRun devops_scripts/drop_sql.sh %:p<CR>
+    nnoremap  <M-F9> :call FloatingWindowLog('/tmp/drop.log')<CR>
+ endif
+
+set errorformat+=ERROR\ %l/%c\ %f\ %m
+
+nnoremap <Leader>el yiWi<element name="<ESC>$a"             value="<ESC>pa"><ESC>^j
+nnoremap <Leader>lo i<tab>log('<C-r>0: ' \|\| <C-r>0,  l_module);<ESC>^kj<ESC>
+
+" nnoremap <Leader>fp /proc<CR>
+" nnoremap <Leader>ff /func<CR>
+""""""""""""""""""""""""""""""
+" => Set .pkb, .pks to sql filetype
+""""""""""""""""""""""""""""""
+autocmd BufEnter *.pkb :setlocal filetype=sql
+autocmd BufEnter *.pks :setlocal filetype=sql
+autocmd BufEnter *.plb :setlocal filetype=sql
+autocmd BufEnter *.pls :setlocal filetype=sql
+autocmd BufEnter *.ldt :setlocal filetype=sql
+
+map <F13>  <S-F1>
+map <F14>  <S-F2>
+map <F15>  <S-F3>
+map <F16>  <S-F4>
+map <F17>  <S-F5>
+map <F18>  <S-F6>
+map <F19>  <S-F7>
+map <F20>  <S-F8>
+map <F21>  <S-F9>
+map <F22>  <S-F10>
+map <F23>  <S-F11>
+map <F24>  <S-F12>
+
+map <F25>  <C-F1>
+map <F26>  <C-F2>
+map <F27>  <C-F3>
+map <F28>  <C-F4>
+map <F29>  <C-F5>
+map <F30>  <C-F6>
+map <F31>  <C-F7>
+map <F32>  <C-F8>
+map <F33>  <C-F9>
+map <F34>  <C-F10>
+map <F35>  <C-F11>
+map <F36>  <C-F12>
+
+map <F37>  <M-F1>
+map <F38>  <M-F2>
+map <F39>  <M-F3>
+map <F40>  <M-F4>
+map <F41>  <M-F5>
+map <F42>  <M-F6>
+map <F43>  <M-F7>
+map <F44>  <M-F8>
+map <F45>  <M-F9>
+map <F46>  <M-F10>
+map <F47>  <M-F11>
+map <F48>  <M-F12>
+
+map <C-S-F9> :echo F9
 ]])
