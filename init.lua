@@ -142,7 +142,7 @@ set clipboard=unnamedplus
 set mouse+=a
 nnoremap <2-LeftMouse> y
 
-if exists('*SelectionToClipboard')
+" if exists('*SelectionToClipboard')
   function SelectionToClipboard()
     if mode() == "v"
       let selection_start = getcurpos()[1:]
@@ -157,7 +157,7 @@ if exists('*SelectionToClipboard')
       silent normal! o
     endif
   endfunction
-endif
+" endif
 
 vnoremap <LeftRelease> <Cmd>call SelectionToClipboard()<cr>
 
@@ -374,8 +374,8 @@ require('lazy').setup({
   'windwp/nvim-autopairs',
 
   -- Git related plugins
-  'tpope/vim-fugitive',
-  'tpope/vim-rhubarb',
+  -- 'tpope/vim-fugitive',
+  -- 'tpope/vim-rhubarb',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -589,7 +589,8 @@ require('lazy').setup({
   {'akinsho/toggleterm.nvim'},
   {'voldikss/vim-floaterm'},
   {'moll/vim-bbye'},
-   
+  {'mhinz/vim-startify'},
+  {'skywind3000/asyncrun.vim'},
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -604,7 +605,34 @@ require('lazy').setup({
   --
   --    An additional note is that if you only copied in the `init.lua`, you can just comment this line
   --    to get rid of the warning telling you that there are not plugins in `lua/custom/plugins/`.
+
+  -- {
+  -- "kndndrj/nvim-dbee",
+  --   dependencies = {
+  --     "MunifTanjim/nui.nvim",
+  --   },
+  --   build = function()
+  --     -- Install tries to automatically detect the install method.
+  --     -- if it fails, try calling it with one of these parameters:
+  --     --    "curl", "wget", "bitsadmin", "go"
+  --     require("dbee").install()
+  --   end,
+  --   config = function()
+  --     require("dbee").setup({--[[optional config]]
+  --       require("dbee.sources").MemorySource:new({
+  --       {
+  --         name = "D01",
+  --         type = "oracle",
+  --         url = "oracle://apps:ForX8ydev@172.16.40.50:1526/oermod01",
+  --       }
+  --       -- ...
+  --     })
+  --     })
+  --   end,
+  -- },
+
   { import = 'custom.plugins' },
+
 }, {})
 
 -- [[ Setting options ]]
@@ -643,7 +671,7 @@ vim.o.timeout = true
 vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
--- vim.o.completeopt = 'menuone,noselect'
+vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
@@ -708,12 +736,12 @@ vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim', 'html', 'json', 'javascript'},
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
 
-  highlight = { enable = true },
+  highlight = { enable = true , disable = { "sql"}},
   indent = { enable = true, disable = { 'python' } },
   incremental_selection = {
     enable = true,
