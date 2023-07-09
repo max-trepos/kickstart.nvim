@@ -1185,16 +1185,6 @@ endfunction
 " In the new setup somehow this terminal does not work anymore. Anyhow with
 " Wezterm don't really need this too
 
-autocmd BufEnter *.log :setlocal filetype=log
-""""""""""""""""""""""""""""""
-" => Set .pkb, .pks to sql filetype
-""""""""""""""""""""""""""""""
-" autocmd BufEnter *.pkb :setlocal filetype=sql
-" autocmd BufEnter *.pks :setlocal filetype=sql
-" autocmd BufEnter *.plb :setlocal filetype=sql
-" autocmd BufEnter *.pls :setlocal filetype=sql
-" autocmd BufEnter *.ldt :setlocal filetype=sql
-autocmd BufEnter .env.* :setlocal filetype=sh
 
 let g:csv_no_conceal = 1
 
@@ -1236,10 +1226,13 @@ let g:asyncrun_open = 20
 set errorformat+=ERROR\ %l/%c\ %f\ %m
 
 nnoremap <Leader>el yiWi<element name="<ESC>$a"             value="<ESC>pa"><ESC>^j
-nnoremap <Leader>lo i<tab>log('<C-r>0: ' \|\| <C-r>0,  l_module);<ESC>^kj<ESC>
+nnoremap <Leader>lo i<tab>log('<C-r>0: ' \|\| <C-r>0, l_module);<ESC>^kj<ESC>
 
 " nnoremap <Leader>fp /proc<CR>
 " nnoremap <Leader>ff /func<CR>
+
+autocmd BufEnter *.log :setlocal filetype=log
+autocmd BufEnter .env.* :setlocal filetype=sh
 """"""""""""""""""""""""""""""
 " => Set .pkb, .pks to sql filetype
 """"""""""""""""""""""""""""""
