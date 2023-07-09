@@ -1099,13 +1099,6 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 xmap gt <Plug>(Tabularize)
 
-""""""""""""""""""""""""""""""
-" => Tabularize
-""""""""""""""""""""""""""""""
-nmap <Leader>t\|\| :Tabularize /\|\|<CR>
-vmap <Leader>t\|\| :Tabularize /\|\|<CR>
-nmap <Leader>t, :Tabularize /,<CR>
-vmap <Leader>t, :Tabularize /,<CR>
 
 """"""""""""""""""""""""""""""
 " => vim-commentry
@@ -1227,6 +1220,16 @@ set errorformat+=ERROR\ %l/%c\ %f\ %m
 
 nnoremap <Leader>el yiWi<element name="<ESC>$a"             value="<ESC>pa"><ESC>^j
 nnoremap <Leader>lo i<tab>log('<C-r>0: ' \|\| <C-r>0, l_module);<ESC>^kj<ESC>
+
+function PLSQLpa() range
+  " Takes first word as a parameter and adds => and replaces the first character with l
+  execute a:firstline . ',' . a:lastline . 'normal yiwA => pbrl'
+  call Tabularize('/=>/')
+endfunction 
+command -range PLSQLpa :<line1>,<line2>call PLSQLpa()
+command -range Tabp :<line1>,<line2>call Tabularize('/||/')
+command -range Tabpa :<line1>,<line2>call Tabularize('/=>/')
+command -range Tabpe :<line1>,<line2>call Tabularize('/:=/')
 
 " nnoremap <Leader>fp /proc<CR>
 " nnoremap <Leader>ff /func<CR>
