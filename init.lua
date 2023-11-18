@@ -140,7 +140,7 @@ set clipboard=unnamedplus
 "                 \ }
 
 set mouse+=a
-nnoremap <2-LeftMouse> y
+nnoremap <2-LeftMouse> yiw
 
 " if exists('*SelectionToClipboard')
   function SelectionToClipboard()
@@ -264,6 +264,7 @@ nnoremap <Leader>sy :syntax off <CR> :syntax on <CR>
 nnoremap <Leader>qc :cclose <CR>
 nnoremap <A-c> :cclose <CR>
 
+nnoremap <Leader>xf :%!xmllint --format '%' <CR> 
 nnoremap <Leader>; A;<ESC>j
 
 " To replace a word with uanked test in normal mode (Stamp)
