@@ -243,6 +243,7 @@ nnoremap <A-Del>  Da
 inoremap <A-space> <C-x><C-n>
  
 noremap <C-h> :%s/<C-r>0/<C-r>0/g
+noremap <leader>h :%s/<C-r>1/<C-r>0/g
 noremap <A-h> :noh<CR>
 noremap <A-w> <C-W>w
 "
@@ -1195,6 +1196,7 @@ let g:csv_no_conceal = 1
 """"""""""""""""""""""""""""""
 let g:asyncrun_open = 20
  if has('win32') || has('win64') || has('win95') || has('win16')
+    nnoremap  <F1> :vimgrep /error/ % <CR> <bar> :copen <CR>
     nnoremap  <F3> :AsyncRun -program=wsl /mnt/d/test.sh %:p<CR>
     nnoremap  <F4> :FloatermNew --name=executeSql devops_scripts/execute_sql.sh %:p<CR>
     nnoremap  <F5> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/execute_sql.sh %:p<CR>
@@ -1202,6 +1204,7 @@ let g:asyncrun_open = 20
     nnoremap  <F7> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/copy_to_md.sh %:p<CR>
     nnoremap  <C-F9> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/drop_sql.sh %:p<CR>
  else
+    nnoremap  <F1> :vimgrep /error/ % <CR> <bar> :copen <CR>
     nnoremap  <F3> :FloatermNew! --name=sql --title=sql --wintype=split --position=rightbelow devops_scripts/sqlcl.sh<CR>
     nnoremap  <F4> :AsyncRun  devops_scripts/execute_sqlcl.sh devops_scripts/50.SQL_scripts/get_dba_tab_cols.sql @0<CR>
     nnoremap  <S-F4> :exec ":AsyncRun -mode=term -pos=floaterm  devops_scripts/execute_sqlcl.sh devops_scripts/50.SQL_scripts/get_dba_tab_cols.sql" getreg("0")<CR>
