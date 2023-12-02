@@ -285,6 +285,7 @@ noremap <leader>q :Bdelete<CR>
 nnoremap <Leader><space> i<space><esc>
 
 nnoremap <Leader>sy :syntax off <CR> :syntax on <CR>
+nnoremap <Leader>qo :copen <CR>
 nnoremap <Leader>qc :cclose <CR>
 nnoremap <A-c> :cclose <CR>
 
@@ -617,6 +618,7 @@ require('lazy').setup({
   {'mhinz/vim-startify'},
   {'skywind3000/asyncrun.vim'},
   {'chrisbra/csv.vim'},
+  {'tummetott/unimpaired.nvim'},
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -1117,7 +1119,9 @@ require'marks'.setup {
 require("nvim-surround").setup({
             -- Configuration here, or leave empty to use defaults
         })
-
+require('unimpaired').setup {
+            -- add any options here or leave empty
+        }
 vim.cmd([[
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
