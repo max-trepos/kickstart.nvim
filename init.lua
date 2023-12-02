@@ -79,6 +79,7 @@ if Is_WSL() == 1
   " echom "Max was here"
   "
   let g:startify_session_dir = '~/.config/nvim/session'
+let g:startify_bookmarks = [ {'a': '/mnt/d/Dropbox/Apps/WezTerm/wezterm.lua'}, '~/.zshrc' ]
 else
   let configpath="D:\\Dropbox\\Apps\\MobaXterm_root\\"
   nnoremap <Leader>iv :tabe D:\Dropbox\Apps\MobaXterm_root\nvim\init.vim<CR> <bar> :tcd D:\Dropbox\Apps\MobaXterm_root\nvim
@@ -86,15 +87,21 @@ else
   nnoremap <Leader>wz :TablineTabNew D:\Dropbox\Apps\WezTerm\wezterm.lua<CR> <bar> :tcd D:\Dropbox\Apps\WezTerm<CR>
   let xrtp=configpath . "nvim"
   let plugpath=xrtp . "\\plugged"
-  let g:startify_session_dir = 'D:\\Dropbox\\Apps\\MobaXterm_root\\'
+  let g:startify_session_dir = 'D:\\Dropbox\\Apps\\MobaXterm_root\\nvim\\sessions_windows'
+  let g:startify_bookmarks = [ {'a': 'D:\\Dropbox\\Apps\\WezTerm\\wezterm.lua'}, '~/.zshrc' ]
 endif
 "
 "Startify
 "
 let g:startify_change_to_dir = 0
 let g:startify_session_delete_buffers = 0
-let g:startify_bookmarks = ['']
- 
+let g:startify_lists = [
+          \ { 'type': 'sessions',  'header': ['   Sessions']       },
+          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+          \ { 'type': 'files',     'header': ['   MRU']            },
+          \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+          \ { 'type': 'commands',  'header': ['   Commands']       },
+          \ ]
 " For tabline.nvim
 set sessionoptions+=tabpages,globals " store tabpages and globals in session
 
