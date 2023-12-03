@@ -620,6 +620,8 @@ require('lazy').setup({
   {'chrisbra/csv.vim'},
   {'tummetott/unimpaired.nvim'},
   {'christoomey/vim-tmux-navigator'},
+  {'nvim-tree/nvim-tree.lua' },
+  -- {'nvim-tree/nvim-web-devicons' },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -1123,6 +1125,29 @@ require("nvim-surround").setup({
 require('unimpaired').setup {
             -- add any options here or leave empty
         }
+
+vim.opt.termguicolors = true
+
+-- empty setup using defaults
+require("nvim-tree").setup()
+
+-- OR setup with some options
+require("nvim-tree").setup({
+  sort = {
+    sorter = "case_sensitive",
+  },
+  view = {
+    width = 50,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+})
+
+
 vim.cmd([[
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -1149,8 +1174,12 @@ autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
 let g:floaterm_autoinsert = v:false
 let g:floaterm_width = 0.8
 
-nnoremap <leader>lg :FloatermNew! --title=lazygit lazygit<CR>
+nnoremap <leader>fe :NvimTreeToggle<CR>
 
+""""""""""""""""""""""""""""""
+" => nvim-tree
+""""""""""""""""""""""""""""""
+nnoremap <leader>lg :FloatermNew! --title=lazygit lazygit<CR>
 """"""""""""""""""""""""""""""
 " => Target, Never seek backwards
 """"""""""""""""""""""""""""""
