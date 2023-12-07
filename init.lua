@@ -434,7 +434,32 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim', opts = {
+    triggers_nowait = {
+    -- marks
+    "`",
+    "'",
+    "g`",
+    "g'",
+    -- registers
+    '"',
+    "<c-r>",
+    -- spelling
+    "z=",
+    "o",
+    "O",
+    "s"
+
+  },
+  triggers_blacklist = {
+    -- list of mode / prefixes that should never be hooked by WhichKey
+    -- this is mostly relevant for keymaps that start with a native binding
+    n = {  "o" , "O", "s"},
+    i = { "j", "k", "o" },
+    v = { "j", "k" },
+  },
+
+  } },
   { -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -1219,7 +1244,6 @@ function! s:TabToggleTerminal() abort
     execute "sp | wincmd j | resize 20 |  term "
     let g:tab_buf[index] = bufnr("$")
   else
-    let visible = win_findbuf(g:tab_buf[index])
     " echom "visible: " . len(visible)
     if len(visible) > 0 
       call win_execute(visible[0], 'wincmd c')
@@ -1347,4 +1371,6 @@ map <F47>  <M-F11>
 map <F48>  <M-F12>
 
 map <C-S-F9> :echo F9
+
+
 ]])
