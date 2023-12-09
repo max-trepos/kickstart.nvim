@@ -621,6 +621,24 @@ require('lazy').setup({
   {'tummetott/unimpaired.nvim'},
   {'christoomey/vim-tmux-navigator'},
   {'nvim-tree/nvim-tree.lua' },
+  {'jpalardy/vim-slime' },
+  -- {
+  --   "kndndrj/nvim-dbee",
+  --   dependencies = {
+  --     "MunifTanjim/nui.nvim",
+  --   },
+  --   build = function()
+  --     -- Install tries to automatically detect the install method.
+  --     -- if it fails, try calling it with one of these parameters:
+  --     --    "curl", "wget", "bitsadmin", "go"
+  --     require("dbee").install()
+  --   end,
+  --   config = function()
+  --     require("dbee").setup(--[[optional config]])
+  --   end,
+  -- },
+
+
   -- {'nvim-tree/nvim-web-devicons' },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -1147,7 +1165,22 @@ require("nvim-tree").setup({
   },
 })
 
-
+-- {
+--   "kndndrj/nvim-dbee",
+--   dependencies = {
+--     "MunifTanjim/nui.nvim",
+--   },
+--   build = function()
+--     -- Install tries to automatically detect the install method.
+--     -- if it fails, try calling it with one of these parameters:
+--     --    "curl", "wget", "bitsadmin", "go"
+--     require("dbee").install()
+--   end,
+--   config = function()
+--     require("dbee").setup(--[[optional config]])
+--   end,
+-- } 
+--
 vim.cmd([[
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -1249,6 +1282,11 @@ let g:csv_no_conceal = 1
 
 
 """"""""""""""""""""""""""""""
+" => vim-slime
+""""""""""""""""""""""""""""""
+let g:slime_target = "neovim"
+
+""""""""""""""""""""""""""""""
 " => asyncrun for sql
 """"""""""""""""""""""""""""""
 let g:asyncrun_open = 20
@@ -1264,7 +1302,7 @@ let g:asyncrun_open = 20
     nnoremap  <F1> :vimgrep /error/ % <CR> <bar> :copen <CR>
     nnoremap  <F3> :FloatermNew! --name=sql --title=sql --wintype=split --position=rightbelow devops_scripts/sqlcl.sh<CR>
     nnoremap  <F4> :AsyncRun  devops_scripts/execute_sqlcl.sh devops_scripts/50.SQL_scripts/get_dba_tab_cols.sql @0<CR>
-    nnoremap  <S-F4> :exec ":AsyncRun -mode=term -pos=floaterm  devops_scripts/execute_sqlcl.sh devops_scripts/50.SQL_scripts/get_dba_tab_cols.sql" getreg("0")<CR>
+    nnoremap  <S-F4> :exec ":AsyncRun -mode=term -pos=floaterm  devops_scripts/execute_sqlcl_silent.sh devops_scripts/50.SQL_scripts/get_dba_tab_cols.sql" getreg("0")<CR>
     nnoremap  <F5> :AsyncRun devops_scripts/execute_sql.sh %:p<CR>
     nnoremap  <C-F5> :AsyncRun -mode=term -pos=floaterm devops_scripts/execute_sql.sh %:p<CR>
     nnoremap  <leader>f5 :AsyncRun -mode=term -pos=floaterm devops_scripts/execute_sql.sh %:p<CR>
