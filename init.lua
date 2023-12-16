@@ -814,14 +814,14 @@ require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx'
                       , 'typescript', 'help', 'vim', 'html', 'json', 'javascript'
-                      , 'sql'
+                      -- , 'sql'
                       , 'markdown', 'markdown_inline'
                      },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
 
-  highlight = { enable = true , disable = { ""}},
+  highlight = { enable = true , disable = { "sql"}},
   indent = { enable = true, disable = { 'python' } },
   incremental_selection = {
     enable = true,
@@ -877,6 +877,7 @@ require('nvim-treesitter.configs').setup {
     },
   },
 }
+
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
