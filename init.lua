@@ -265,9 +265,9 @@ nnoremap <A-Del>  Da
 
 inoremap <A-space> <C-x><C-n>
  
-noremap <C-h> :%s/<C-r>0/<C-r>0/g
+noremap <A-h> :%s/<C-r>0/<C-r>0/g
 noremap <leader>h :%s/<C-r>1/<C-r>0/g
-noremap <A-h> :noh<CR>
+" noremap <A-h> :noh<CR>
 noremap <A-w> <C-W>w
 "
 " Quickly insert an empty new line without entering insert mode
