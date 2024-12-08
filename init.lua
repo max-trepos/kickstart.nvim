@@ -80,7 +80,7 @@ if Is_WSL() == 1
   else
         let plugpath=xrtp . "/wsl_plugged_aarch64"
   endif
-  echom plugpath
+  " echom plugpath
 
   set rtp+=/mnt/d/Dropbox/Apps/MobaXterm_root/nvim
   " echom "Max was here"
