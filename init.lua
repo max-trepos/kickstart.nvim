@@ -74,7 +74,14 @@ if Is_WSL() == 1
   nnoremap <Leader>ah :TablineTabNew /mnt/d/Dropbox/scripts/auto_hot_key/ahk_program_run.ahk<CR> <bar> :tcd /mnt/d/Dropbox/scripts/auto_hot_key<CR>
   nnoremap <Leader>wz :TablineTabNew /mnt/d/Dropbox/Apps/WezTerm/wezterm.lua<CR> <bar> :tcd /mnt/d/Dropbox/Apps/WezTerm<CR>
   let xrtp=configpath . "nvim" 
-  let plugpath=xrtp . "/plugged"
+  let g:arch = system("uname -m")
+  if g:arch  =~ 'X86_64'
+        let plugpath=xrtp . "/wsl_plugged_X86_64"
+  else
+        let plugpath=xrtp . "/wsl_plugged_aarch64"
+  endif
+  echom plugpath
+
   set rtp+=/mnt/d/Dropbox/Apps/MobaXterm_root/nvim
   " echom "Max was here"
   "
@@ -86,7 +93,14 @@ else
   nnoremap <Leader>ah :tabe D:\Dropbox\scripts\auto_hot_key\ahk_program_run.ahk<CR> <bar> :tcd D:\Dropbox\scripts\auto_hot_key
   nnoremap <Leader>wz :TablineTabNew D:\Dropbox\Apps\WezTerm\wezterm.lua<CR> <bar> :tcd D:\Dropbox\Apps\WezTerm<CR>
   let xrtp=configpath . "nvim"
-  let plugpath=xrtp . "\\plugged"
+  let g:arch = system("echo %PROCESSOR_ARCHITECTURE%")
+  if g:arch  =~ 'AMD64'
+        let plugpath=xrtp . "\\win_plugged_AMD64"
+  else
+        let plugpath=xrtp . "\\win_plugged_ARM64"
+  endif
+  " echom plugpath
+
   let g:startify_session_dir = 'D:\\Dropbox\\Apps\\MobaXterm_root\\nvim\\sessions_windows'
   let g:startify_bookmarks = [ {'a': 'D:\\Dropbox\\Apps\\WezTerm\\wezterm.lua'}, '~/.zshrc' ]
 endif
