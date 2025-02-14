@@ -576,6 +576,7 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    opts = function(_, opts) opts.ignore_install = { "help" } end,
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
@@ -590,6 +591,7 @@ require('lazy').setup({
   {'akinsho/toggleterm.nvim'},
   {'voldikss/vim-floaterm'},
   {'moll/vim-bbye'},
+  {'skywind3000/asyncrun.vim'},
    
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -709,7 +711,7 @@ vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'help', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
