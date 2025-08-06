@@ -1,0 +1,1 @@
+/mnt/d/Dropbox/Apps/MobaXterm_root/.vimrc
