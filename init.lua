@@ -661,7 +661,7 @@ require('lazy').setup({
   {'chrisbra/csv.vim'},
   {'tummetott/unimpaired.nvim'},
   {'christoomey/vim-tmux-navigator'},
-  {'nvim-tree/nvim-tree.lua' },
+  -- {'nvim-tree/nvim-tree.lua' },
   {'jpalardy/vim-slime' },
   -- {
   --   "kndndrj/nvim-dbee",
@@ -1195,24 +1195,24 @@ require('unimpaired').setup {
 vim.opt.termguicolors = true
 
 -- empty setup using defaults
-require("nvim-tree").setup()
+-- require("nvim-tree").setup()
 
 -- OR setup with some options
-require("nvim-tree").setup({
-  sort = {
-    sorter = "case_sensitive",
-  },
-  view = {
-    width = 50,
-  },
-  renderer = {
-    group_empty = true,
-  },
-  filters = {
-    dotfiles = true,
-  },
-})
-
+-- require("nvim-tree").setup({
+--   sort = {
+--     sorter = "case_sensitive",
+--   },
+--   view = {
+--     width = 50,
+--   },
+--   renderer = {
+--     group_empty = true,
+--   },
+--   filters = {
+--     dotfiles = true,
+--   },
+-- })
+--
 -- {
 --   "kndndrj/nvim-dbee",
 --   dependencies = {
@@ -1255,7 +1255,7 @@ autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
 let g:floaterm_autoinsert = v:false
 let g:floaterm_width = 0.8
 
-nnoremap <leader>fe :NvimTreeToggle<CR>
+" nnoremap <leader>fe :NvimTreeToggle<CR>
 
 """"""""""""""""""""""""""""""
 " => nvim-tree
