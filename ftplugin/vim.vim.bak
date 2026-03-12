@@ -1,0 +1,10 @@
+
+""""""""""""""""""""""""""""""
+" => asyncrun for sql
+""""""""""""""""""""""""""""""
+let g:asyncrun_open = 20
+if has('win32') || has('win64') || has('win95') || has('win16')
+  nnoremap  <buffer> <F5> :so%<CR>
+else
+  nnoremap  <buffer> <F5> :so%<CR>
+endif

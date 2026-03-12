@@ -1,0 +1,48 @@
+
+"
+""""""""""""""""""""""""""""""
+" => asyncrun for sql
+""""""""""""""""""""""""""""""
+let g:asyncrun_open = 20
+ if has('win32') || has('win64') || has('win95') || has('win16')
+    nnoremap <buffer> <F3> :AsyncRun -program=wsl /mnt/d/test.sh %:p<CR>
+    nnoremap <buffer> <F4> :FloatermNew --name=executeSql devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap <buffer> <F5> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap <buffer> <F6> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/install_sql.sh %:p<CR>
+    nnoremap <buffer> <F7> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/copy_to_md.sh %:p<CR>
+    nnoremap <buffer> <C-F9> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/drop_sql.sh %:p<CR>
+    nnoremap <buffer> <M-F9> :AsyncRun -program=wsl /mnt/d/Development/devops_scripts/drop_sql.sh %:p<CR>
+ else
+   " nnoremap <F4> :FloatermNew --name=executeSql --autoclose=0 devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap <buffer> <F3> :FloatermNew! --name=sql --title=sql --wintype=split --position=rightbelow devops_scripts/sqlcl.sh<CR>
+    nnoremap <buffer> <F4> :AsyncRun  devops_scripts/execute_sqlcl.sh devops_scripts/50.SQL_scripts/get_dba_tab_cols.sql @0<CR>
+    nnoremap <buffer> <S-F4> :exec ":AsyncRun -mode=term -pos=floaterm  devops_scripts/execute_sqlcl.sh devops_scripts/50.SQL_scripts/get_dba_tab_cols.sql" getreg("0")<CR>
+    nnoremap <buffer> <F5> :AsyncRun devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap <buffer> <C-F5> :AsyncRun -mode=term -pos=floaterm devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap <buffer> <leader>f5 :AsyncRun -mode=term -pos=floaterm devops_scripts/execute_sql.sh %:p<CR>
+    nnoremap <buffer> <C-S-F5> :call FloatingWindowLog('/tmp/execute.log')<CR>
+    nnoremap <buffer> <F6> :AsyncRun devops_scripts/install_sql.sh %:p<CR>
+    nnoremap <buffer> <C-F6> :AsyncRun -mode=term -pos=floaterm_reuse devops_scripts/install_sql.sh %:p<CR>
+    nnoremap <buffer> <C-S-F6> :call FloatingWindowLog('/tmp/install.log')<CR>
+    nnoremap <buffer> <F7> :AsyncRun devops_scripts/copy_to_md.sh %:p<CR>
+    nnoremap <F9> :FloatermToggle <CR>
+    nnoremap <buffer> <C-F9> :AsyncRun devops_scripts/drop_sql.sh %:p<CR>
+    nnoremap <buffer> <C-S-F9> :call FloatingWindowLog('/tmp/drop.log')<CR>
+ endif
+
+set errorformat+=ERROR\ %l/%c\ %f\ %m
+
+nnoremap <Leader>el yiWi<element name="<ESC>$a"             value="<ESC>pa"><ESC>^j
+nnoremap <Leader>lo i<tab>log('<C-r>0: ' \|\| <C-r>0,  l_module);<ESC>^kj<ESC>
+
+" nnoremap <Leader>fp /proc<CR>
+" nnoremap <Leader>ff /func<CR>
+""""""""""""""""""""""""""""""
+" => Set .pkb, .pks to sql filetype
+""""""""""""""""""""""""""""""
+autocmd BufEnter *.pkb :setlocal filetype=sql
+autocmd BufEnter *.pks :setlocal filetype=sql
+autocmd BufEnter *.plb :setlocal filetype=sql
+autocmd BufEnter *.pls :setlocal filetype=sql
+autocmd BufEnter *.ldt :setlocal filetype=sql
+"
