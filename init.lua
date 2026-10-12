@@ -41,6 +41,8 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+-- Paste using Shift+Insert in Insert, Terminal, and Command-line modes
+vim.keymap.set({'i', 'c', 't'}, '<S-Insert>', '<C-R>+', { noremap = true })
 
 -- Neovide
 vim.cmd([[
